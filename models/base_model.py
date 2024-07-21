@@ -13,8 +13,8 @@ class BaseModel:
         created_at: (datetime) The datetime when an instance is created
         updated_at: (datetime) The date time when an instance is created
                     and updated whenever the object changes
-
     """
+
     def __init__(self):
         """
 
