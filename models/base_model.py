@@ -49,9 +49,7 @@ class BaseModel:
 
     def to_dict(self):
         """
-
         Returns a dictionary representation of the instance.
-
         The dictionary includes all instance attributes, as ass __class__
         key with the class name of the object
         The updated_at and created_at attributes are converted
