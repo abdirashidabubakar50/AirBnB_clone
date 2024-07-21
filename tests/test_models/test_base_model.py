@@ -5,6 +5,7 @@ from models.base_model import BaseModel
 
 
 class TestBaseModel(unittest.TestCase):
+    """unittest class for testing teh BaseModel class"""
     def setUp(self):
         """set up a new instance of BaseModel before each test"""
         self.model = BaseModel()
