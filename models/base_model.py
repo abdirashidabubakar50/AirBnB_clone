@@ -38,6 +38,7 @@ class BaseModel:
             str: The string representation of the instance
         """
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+
     def save(self):
         """
         Updates the updated_at attribute with the current datetime.
@@ -45,7 +46,7 @@ class BaseModel:
         This method should be called whenever the instance is modified
         """
         self.updated_at = datetime.now()
-    
+
     def to_dict(self):
         """
 
