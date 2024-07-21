@@ -1,14 +1,25 @@
-#!/usr/bin/python3
+#!usr/bin/python3
+import unittest
+from datetime import datetime, timedelta
+import time
 from models.base_model import BaseModel
 
-my_model = BaseModel()
-my_model.name = "My First Model"
-my_model.my_number = 89
-print(my_model)
-my_model.save()
-print(my_model)
-my_model_json = my_model.to_dict()
-print(my_model_json)
-print("JSON of my_model:")
-for key in my_model_json.keys():
-    print("\t{}: ({}) - {}".format(key, type(my_model_json[key]), my_model_json[key]))
+class TestBaseModel(unittest.TestCase):
+    def setUp(self):
+        """set up a new instance of BaseModel before each test"""
+        self.model = BaseModel()
+
+    def test_initialization(self):
+        """Test the initialization fo the BaseModel instance"""
+        self.assertIsInstance(self.model.id, str)
+        self.assertIsInstance(self.model.created_at, datetime)
+        self.assertIsInstance(self.model.updated_at, datetime)
+        self.assertEqual(self.model.created_at, self.model.updated_at)
+    
+    # def test_str(self):
+    #     """Test the string representation of the BaseModel instance"""
+    #     expected_str = f"[BaseModel] ({self.model.id}) ({self.model.__dict__})"
+    #     self.assertEqual(str(self.model), expected_str)
+
+if __name__ == "__main__":
+    unittest.main()
