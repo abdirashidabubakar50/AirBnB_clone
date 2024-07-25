@@ -19,6 +19,11 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Override the empty line behaviour to do nothing."""
         pass
+    
+    def do_help(self, line):
+        """Show help information."""
+        # Call the parent class's help method to show default help text
+        cmd.Cmd.do_help(self, line)
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
