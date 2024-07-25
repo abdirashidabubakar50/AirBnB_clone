@@ -16,22 +16,30 @@ class TestFileStorage(unittest.TestCase):
         if os.path.exists(self.file_path):
             os.remove(self.file_path)
 
+    def test_file_path(self):
+        self.assertTrue(hasattr(self.storage, '_FileStorage__file_path'))
+        self.assertEqual(self.storage._FileStorage__file_path, 'file.json')
+
+    def test_objects(self):
+        self.assertTrue(hasattr(self.storage, '_FileStorage__objects'))
+        self.assertIsInstance(self.storage._FileStorage__objects, dict)
+
     def test_all_method(self):
         self.assertEqual(self.storage.all(), {})
 
-    def test_new_method(self):
+    def test_new(self):
         obj = BaseModel()
         self.storage.new(obj)
         key = f"{obj.__class__.__name__}.{obj.id}"
         self.assertIn(key, self.storage.all())
 
-    def test_save_method(self):
+    def test_save(self):
         obj = BaseModel()
         self.storage.new(obj)
         self.storage.save()
         self.assertTrue(os.path.exists(self.file_path))
 
-    def test_reload_method(self):
+    def test_reload(self):
         obj = BaseModel()
         self.storage.new(obj)
         self.storage.save()
