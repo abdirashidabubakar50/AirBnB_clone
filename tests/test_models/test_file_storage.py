@@ -4,6 +4,7 @@ from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 import os
 
+
 class TestFileStorage(unittest.TestCase):
     def setUp(self):
         self.storage = FileStorage()
@@ -37,6 +38,7 @@ class TestFileStorage(unittest.TestCase):
         self.storage.reload()
         key = f"{obj.__class__.__name__}.{obj.id}"
         self.assertIn(key, self.storage.all())
+
 
 if __name__ == "__main__":
     unittest.main()
