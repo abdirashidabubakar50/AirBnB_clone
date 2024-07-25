@@ -115,19 +115,19 @@ class HBNBCommand(cmd.Cmd):
                 instances = str(instance)
         print(instances)
 
-    def do_update(self, arg):
+    def do_update(self, line):
         """"Updates an instance based on the class name and id
         by adding or updating attribute(save the change into the JSON file)"""
-        args = arg.split(" ", 3)
+        args = line.split(maxsplit=3)
 
-        if not arg:
+        if len(args) < 2:
             print("** class name missing **")
             return
 
-        if len(args) < 2:
+        if len(args) < 3:
             print("** instance id missing **")
 
-        if len(args) < 3:
+        if len(args) < 4:
             print("** attribute name missing **")
 
         if len(args) < 4:
@@ -153,11 +153,14 @@ class HBNBCommand(cmd.Cmd):
 
         try:
             attr_type = type(getattr(instance, attribute_name))
-            attribute_value = attr_type(attribute_value)
+            if attr_type == int:
+                attribute_value = int(attribute_value)
+            elif attr_type == float:
+                attribute_value = float(attribute_value)
+            else:
+                attribute_value = str(attribute_value)
         except AttributeError:
             pass
-        except ValueError:
-            print(f"**value {attribute_value} is not of type {attr_type.__name__}**")
 
         setattr(instance, attribute_name, attribute_value)
         instance.save()
