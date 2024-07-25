@@ -113,7 +113,7 @@ class HBNBCommand(cmd.Cmd):
         for key, instance in storage.all().items():
             if key.startswith(arg):
                 instances = str(instance)
-        print(instances)
+            print(instances)
 
     def do_update(self, line):
         """"Updates an instance based on the class name and id
