@@ -120,18 +120,19 @@ class HBNBCommand(cmd.Cmd):
         by adding or updating attribute(save the change into the JSON file)"""
         args = line.split(maxsplit=3)
 
-        if len(args) < 2:
-            print("** class name missing **")
-            return
-
-        if len(args) < 3:
-            print("** instance id missing **")
-
         if len(args) < 4:
-            print("** attribute name missing **")
-
-        if len(args) < 4:
-            print("** value missing **")
+            if len(args) < 1:
+                print("** class name missing **")
+                return
+            elif len(args) < 2:
+                print("** instance id missing **")
+                return
+            elif len(args) < 3:
+                print("** attribute name missing **")
+                return
+            elif len(args) < 4:
+                print("** value missing **")
+                return
 
         class_name = args[0]
         instance_id = args[1]
@@ -160,7 +161,8 @@ class HBNBCommand(cmd.Cmd):
             else:
                 attribute_value = str(attribute_value)
         except AttributeError:
-            pass
+            print('** Invalid attribute value **')
+            return
 
         setattr(instance, attribute_name, attribute_value)
         instance.save()
