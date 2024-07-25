@@ -24,7 +24,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertTrue(hasattr(self.storage, '_FileStorage__objects'))
         self.assertIsInstance(self.storage._FileStorage__objects, dict)
 
-    def test_all_method(self):
+    def test_all(self):
         self.assertEqual(self.storage.all(), {})
 
     def test_new(self):
