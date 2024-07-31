@@ -27,3 +27,21 @@ class TestPlace(unittest.TestCase):
         """test teh number_rooms attribute"""
         self.assertEqual(self.place.number_rooms, 0)
     
+    def test_number_bathrooms(self):
+        """tests the number_bathrooms attribute"""
+        self.assertEqual(self.place.number_bathrooms, 0)
+    
+    def test_max_guest(self):
+        """tests the max_guest attribute"""
+        self.assertEqual(self.place.max_guest, 0)
+    
+    def test_latitude(self):
+        """tests the latitude attribute"""
+        self.assertEqual(self.place.latitude, 0.0)
+    
+    def test_longitude(self):
+        """tests the longitude attribute"""
+        self.assertEqual(self.place.longitude, 0.0)
+    def test_amenity_ids(self):
+        """tests the amenity_ids attribute"""
+        self.assertEqual(self.place.amenity_ids, [])
