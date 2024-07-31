@@ -224,6 +224,23 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
         else:
             print(instance)
+    
+    def do_class_destroy(self, class_name, instance_id):
+        """Deletes an instance based on the class name and id"""
+        cls = self.classes.get(class_name)
+
+        if cls is None:
+            print("** class doesn't exist **")
+            return
+
+        key = f"{class_name}.{instance_id}"
+        instance = storage.all().get(key)
+
+        if instance is None:
+            print("** no instance found **")
+        else:
+            del storage.all()[key]
+            storage.save()
 
     def default(self, line):
         """Handles unknown commands or class method calls"""
@@ -238,6 +255,9 @@ class HBNBCommand(cmd.Cmd):
             elif method_name == "show":
                 params = params.strip('"')
                 return self.do_class_show(class_name, params)
+            elif method_name == "destroy":
+                params = params.strip('"')
+                return self.do_class_destroy(class_name, params)
         print("** Unknown syntax: {} **".format(line))
 
 if __name__ == "__main__":
