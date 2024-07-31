@@ -4,6 +4,7 @@ from models.base_model import BaseModel
 
 
 class User(BaseModel):
+    """Represents a user for the AirBnB clone project"""
     email = ""
     password = ""
     first_name = ""
