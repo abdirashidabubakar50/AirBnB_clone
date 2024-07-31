@@ -208,15 +208,36 @@ class HBNBCommand(cmd.Cmd):
         
         count = sum(1 for key in storage.all().keys() if key.startswith(f"{class_name}."))
         print(count)
+    
+    def do_class_show(self, class_name, instance_id):
+        """Prints the string representation of an instance based on the class name and id"""
+        cls = self.classes.get(class_name)
+
+        if cls is None:
+            print("** class doesn't exist **")
+            return
+
+        key = f"{class_name}.{instance_id}"
+        instance = storage.all().get(key)
+
+        if instance is None:
+            print("** no instance found **")
+        else:
+            print(instance)
 
     def default(self, line):
         """Handles unknown commands or class method calls"""
-        if '.' in line:
+        if '.' in line and '(' in line and ')' in line:
             class_name, method_call = line.split('.', 1)
-            if method_call == "all()":
+            method_name, params = method_call.split('(', 1)
+            params = params.rstrip(')')
+            if method_name == "all":
                 return self.do_class_all(class_name)
-            elif method_call == "count()":
+            elif method_name == "count":
                 return self.do_class_count(class_name)
+            elif method_name == "show":
+                params = params.strip('"')
+                return self.do_class_show(class_name, params)
         print("** Unknown syntax: {} **".format(line))
 
 if __name__ == "__main__":
