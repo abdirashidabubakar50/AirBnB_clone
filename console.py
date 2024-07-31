@@ -241,6 +241,36 @@ class HBNBCommand(cmd.Cmd):
         else:
             del storage.all()[key]
             storage.save()
+    
+    def do_class_update(self, class_name, instance_id, attribute_name, attribute_value):
+        """Updates an instance based on the class name and id by adding or updating attribute"""
+        cls = self.classes.get(class_name)
+
+        if cls is None:
+            print("** class doesn't exist **")
+            return
+
+        key = f"{class_name}.{instance_id}"
+        instance = storage.all().get(key)
+
+        if instance is None:
+            print("** no instance found **")
+            return
+
+        # Attempt to cast the attribute value to the correct type if the attribute already exists
+        try:
+            attr_type = type(getattr(instance, attribute_name))
+            if attr_type == int:
+                attribute_value = int(attribute_value)
+            elif attr_type == float:
+                attribute_value = float(attribute_value)
+            else:
+                attribute_value = str(attribute_value)
+        except AttributeError:
+            pass
+
+        setattr(instance, attribute_name, attribute_value)
+        instance.save()
 
     def default(self, line):
         """Handles unknown commands or class method calls"""
@@ -258,6 +288,13 @@ class HBNBCommand(cmd.Cmd):
             elif method_name == "destroy":
                 params = params.strip('"')
                 return self.do_class_destroy(class_name, params)
+            elif method_name == "update":
+                params = params.split(', ')
+                if len(params) == 3:
+                    instance_id = params[0].strip('"')
+                    attribute_name = params[1].strip('"')
+                    attribute_value = params[2].strip('"')
+                    return self.do_class_update(class_name, instance_id, attribute_name, attribute_value)
         print("** Unknown syntax: {} **".format(line))
 
 if __name__ == "__main__":
