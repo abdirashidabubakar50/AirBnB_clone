@@ -197,6 +197,17 @@ class HBNBCommand(cmd.Cmd):
         
         instances = [str(inst) for key, inst in storage.all().items() if key.startswith(f"{class_name}.")]
         print(instances)
+    
+    def do_class_count(self, class_name):
+        """Prints the number of instances of a specific class"""
+        cls = self.classes.get(class_name)
+        
+        if cls is None:
+            print("** class doesn't exist **")
+            return
+        
+        count = sum(1 for key in storage.all().keys() if key.startswith(f"{class_name}."))
+        print(count)
 
     def default(self, line):
         """Handles unknown commands or class method calls"""
@@ -204,6 +215,8 @@ class HBNBCommand(cmd.Cmd):
             class_name, method_call = line.split('.', 1)
             if method_call == "all()":
                 return self.do_class_all(class_name)
+            elif method_call == "count()":
+                return self.do_class_count(class_name)
         print("** Unknown syntax: {} **".format(line))
 
 if __name__ == "__main__":
