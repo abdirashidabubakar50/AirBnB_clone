@@ -141,9 +141,9 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         """"Updates an instance based on the class name and id
         by adding or updating attribute(save the change into the JSON file)"""
-        args = line.split(maxsplit=3)
+        args = line.split(maxsplit=2)
 
-        if len(args) < 4:
+        if len(args) < 3:
             if len(args) < 1:
                 print("** class name missing **")
                 return
@@ -151,42 +151,15 @@ class HBNBCommand(cmd.Cmd):
                 print("** instance id missing **")
                 return
             elif len(args) < 3:
-                print("** attribute name missing **")
-                return
-            elif len(args) < 4:
-                print("** value missing **")
+                print("** dictionary representation missing **")
                 return
 
         class_name = args[0]
         instance_id = args[1]
-        attribute_name = args[2]
-        attribute_value = args[3]
+        attribute_dict = args[2]
 
-        cls = self.classes.get(class_name)
+        self.do_class_update(class_name, instance_id, attribute_dict)
 
-        if cls is None:
-            print("** class doesn't exist **")
-            return
-
-        key = f"{class_name}.{instance_id}"
-        instance = storage.all().get(key)
-
-        if instance is None:
-            print("** no instance found **")
-            return
-        try:
-            attr_type = type(getattr(instance, attribute_name))
-            if attr_type == int:
-                attribute_value = int(attribute_value)
-            elif attr_type == float:
-                attribute_value = float(attribute_value)
-            else:
-                attribute_value = str(attribute_value)
-        except AttributeError:
-            pass
-        setattr(instance, attribute_name, attribute_value)
-        instance.save()
-    
     def do_class_all(self, class_name):
         """Prints all instances of a specific class"""
         cls = self.classes.get(class_name)
@@ -242,7 +215,7 @@ class HBNBCommand(cmd.Cmd):
             del storage.all()[key]
             storage.save()
     
-    def do_class_update(self, class_name, instance_id, attribute_name, attribute_value):
+    def do_class_update(self, class_name, instance_id, attribute_dict):
         """Updates an instance based on the class name and id by adding or updating attribute"""
         cls = self.classes.get(class_name)
 
@@ -257,19 +230,28 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
             return
 
-        # Attempt to cast the attribute value to the correct type if the attribute already exists
         try:
-            attr_type = type(getattr(instance, attribute_name))
-            if attr_type == int:
-                attribute_value = int(attribute_value)
-            elif attr_type == float:
-                attribute_value = float(attribute_value)
-            else:
-                attribute_value = str(attribute_value)
-        except AttributeError:
-            pass
+            attributes = eval(attribute_dict)
+            if not isinstance(attributes, dict):
+                raise ValueError
+        except (SyntaxError, ValueError):
+            print("** invalid dictionary format **")
+            return
 
-        setattr(instance, attribute_name, attribute_value)
+        for attribute_name, attribute_value in attributes.items():
+            try:
+                attr_type = type(getattr(instance, attribute_name))
+                if attr_type == int:
+                    attribute_value = int(attribute_value)
+                elif attr_type == float:
+                    attribute_value = float(attribute_value)
+                else:
+                    attribute_value = str(attribute_value)
+            except AttributeError:
+                pass
+
+            setattr(instance, attribute_name, attribute_value)
+        
         instance.save()
 
     def default(self, line):
