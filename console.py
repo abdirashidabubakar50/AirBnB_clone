@@ -271,12 +271,9 @@ class HBNBCommand(cmd.Cmd):
                 params = params.strip('"')
                 return self.do_class_destroy(class_name, params)
             elif method_name == "update":
-                params = params.split(', ')
-                if len(params) == 3:
-                    instance_id = params[0].strip('"')
-                    attribute_name = params[1].strip('"')
-                    attribute_value = params[2].strip('"')
-                    return self.do_class_update(class_name, instance_id, attribute_name, attribute_value)
+                # Detect if the method call includes a dictionary
+                if ',' in params:
+                    return self.do_class_update(class_name, *params.split(', ', 1))
         print("** Unknown syntax: {} **".format(line))
 
 if __name__ == "__main__":
