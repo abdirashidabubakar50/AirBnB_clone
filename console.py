@@ -152,7 +152,6 @@ class HBNBCommand(cmd.Cmd):
         if instance is None:
             print("** no instance found **")
             return
-
         try:
             attr_type = type(getattr(instance, attribute_name))
             if attr_type == int:
@@ -162,9 +161,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 attribute_value = str(attribute_value)
         except AttributeError:
-            print('** Invalid attribute value **')
-            return
-
+            pass
         setattr(instance, attribute_name, attribute_value)
         instance.save()
 
