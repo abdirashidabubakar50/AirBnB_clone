@@ -116,17 +116,25 @@ class HBNBCommand(cmd.Cmd):
         """Prints the stirng representation of all instances based or not on
         the class name
         """
-        if arg:
-            class_name = arg.split()[0]
+        args = arg.split()
+
+
+        if len(args) == 1 and args[0].endswith('.all()'):
+            class_name = args[0].replace('.all()', '')
             cls = self.classes.get(class_name)
             
             if cls is None:
                 print("** class doesn't exist **")
                 return
             
-            instances = [str(inst) for key, inst in storage.all().items() if key.startswith(class_name)]
-        else:
+            instances = [str(inst) for key, inst in storage.all().items() if key.startswith(f"{class_name}.")]
+        
+        elif not args:
             instances = [str(inst) for inst in storage.all().values()]
+        
+        else:
+            print("** Unknown syntax: {} **".format(arg))
+            return
 
         print(instances)
 
@@ -178,7 +186,25 @@ class HBNBCommand(cmd.Cmd):
             pass
         setattr(instance, attribute_name, attribute_value)
         instance.save()
+    
+    def do_class_all(self, class_name):
+        """Prints all instances of a specific class"""
+        cls = self.classes.get(class_name)
+        
+        if cls is None:
+            print("** class doesn't exist **")
+            return
+        
+        instances = [str(inst) for key, inst in storage.all().items() if key.startswith(f"{class_name}.")]
+        print(instances)
 
+    def default(self, line):
+        """Handles unknown commands or class method calls"""
+        if '.' in line:
+            class_name, method_call = line.split('.', 1)
+            if method_call == "all()":
+                return self.do_class_all(class_name)
+        print("** Unknown syntax: {} **".format(line))
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
