@@ -61,7 +61,7 @@ class HBNBCommand(cmd.Cmd):
         instance = storage.all().get(key)
 
         if instance is None:
-            print("** class doesn't exist **")
+            print("** no instance found **")
         else:
             print(instance)
 
