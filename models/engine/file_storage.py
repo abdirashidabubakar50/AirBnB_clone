@@ -2,6 +2,8 @@
 # from models.base_model import BaseModel
 from os.path import exists
 import json
+from base_model import BaseModel
+from user import User
 """ This moduel defines FileStorage class that serializes instatances
 to a JSON file and deserializes JSON file to instances
 """
