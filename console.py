@@ -56,6 +56,7 @@ class HBNBCommand(cmd.Cmd):
             cls = eval(class_name)
         except NameError:
             print("** class doesn't exist **")
+            return
 
         key = f"{class_name}.{instance_id}"
         instance = storage.all().get(key)
