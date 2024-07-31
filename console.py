@@ -6,11 +6,25 @@ import cmd
 from models.base_model import BaseModel
 from models import storage
 from models.user import User
-
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 class HBNBCommand(cmd.Cmd):
     """Command interpreter for the HBNB project"""
     prompt = '(hbnb) '
+
+    classes = {
+        'BaseModel': BaseModel,
+        'User': User,
+        'Place': Place,
+        'State': State,
+        'City': City,
+        'Amenity': Amenity,
+        'Review': Review
+    }
 
     def do_quit(self, line):
         """Quit command to exit the program"""
@@ -32,12 +46,16 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        try:
-            new_instance = eval(arg + "()")
-            new_instance.save()
-            print(new_instance.id)
-        except NameError:
+        class_name = arg.split()[0]
+        cls = self.classes.get(class_name)
+        
+        if cls is None:
             print("** class doesn't exist **")
+            return
+
+        new_instance = cls()
+        new_instance.save()
+        print(new_instance.id)
 
     def do_show(self, arg):
         """Prints the string representation of an instance based on the
@@ -52,10 +70,9 @@ class HBNBCommand(cmd.Cmd):
             return
 
         class_name, instance_id = args[0], args[1]
+        cls = self.classes.get(class_name)
 
-        try:
-            cls = eval(class_name)
-        except NameError:
+        if cls is None:
             print("** class doesn't exist **")
             return
 
@@ -80,10 +97,9 @@ class HBNBCommand(cmd.Cmd):
             return
 
         class_name, instance_id = args[0], args[1]
+        cls = self.classes.get(class_name)
 
-        try:
-            cls = eval(class_name)
-        except NameError:
+        if cls is None:
             print("** class doesn't exist **")
             return
 
@@ -100,22 +116,19 @@ class HBNBCommand(cmd.Cmd):
         """Prints the stirng representation of all instances based or not on
         the class name
         """
-        if not arg:
-            for instance in storage.all().values():
-                instances = str(instance)
-            print(instances)
-            return
+        if arg:
+            class_name = arg.split()[0]
+            cls = self.classes.get(class_name)
+            
+            if cls is None:
+                print("** class doesn't exist **")
+                return
+            
+            instances = [str(inst) for key, inst in storage.all().items() if key.startswith(class_name)]
+        else:
+            instances = [str(inst) for inst in storage.all().values()]
 
-        try:
-            cls = eval(arg)
-        except NameError:
-            print("** class doesn't exist **")
-            return
-
-        for key, instance in storage.all().items():
-            if key.startswith(arg):
-                instances = str(instance)
-            print(instances)
+        print(instances)
 
     def do_update(self, line):
         """"Updates an instance based on the class name and id
@@ -141,9 +154,9 @@ class HBNBCommand(cmd.Cmd):
         attribute_name = args[2]
         attribute_value = args[3]
 
-        try:
-            cls = eval(class_name)
-        except NameError:
+        cls = self.classes.get(class_name)
+
+        if cls is None:
             print("** class doesn't exist **")
             return
 

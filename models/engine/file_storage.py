@@ -2,6 +2,13 @@
 # from models.base_model import BaseModel
 from os.path import exists
 import json
+# from models.base_model import BaseModel
+# from models.user import User
+# from models.place import Place
+# from models.state import State
+# from models.city import City
+# from models.amenity import Amenity
+# from models.review import Review
 
 """ This moduel defines FileStorage class that serializes instatances
 to a JSON file and deserializes JSON file to instances
@@ -49,7 +56,12 @@ class FileStorage:
                 for obj_dict in json_objects.values():
                     class_name = obj_dict["__class__"]
                     del obj_dict["__class__"]
-                    module = __import__('models.base_model',
-                                        fromlist=[class_name.lower()])
-                    cls = getattr(module, class_name)
-                    self.new(cls(**obj_dict))
+                    try:
+                        module = __import__('models.' + class_name.lower(),
+                                            fromlist=[class_name])
+                        cls = getattr(module, class_name)
+                        self.new(cls(**obj_dict))
+                    except ImportError:
+                        print(f"** Error importing class {class_name} **")
+                    except AttributeError:
+                        print(f"** Error finding class {class_name} in module **")
