@@ -48,7 +48,7 @@ class FileStorage:
                 for obj_dict in json_objects.values():
                     class_name = obj_dict["__class__"]
                     del obj_dict["__class__"]
-                    module = __import__('models.' + class_name.lower(),
+                    module = __import__('models.base_model',
                                         fromlist=[class_name])
                     cls = getattr(module, class_name)
                     self.new(cls(**obj_dict))
