@@ -82,7 +82,7 @@ class HBNBCommand(cmd.Cmd):
         try:
             cls = eval(class_name)
         except NameError:
-            print("** class doesn't exist")
+            print("** class doesn't exist **")
             return
 
         key = f"{class_name}.{instance_id}"
